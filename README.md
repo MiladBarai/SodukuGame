@@ -1,2 +1,2 @@
-# SodukuGame
-Soduku game in Python
+# SudokuGame
+Sudoku game in Python
