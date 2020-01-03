@@ -34,6 +34,10 @@ class SudokuBoard:
         :param square: tuple (x, y)
         :return: boolean, true if input possible, false if not
         """
+        (x, y) = square
+        if square in self._preset_square or x not in range(0, 9) or y not in range(0, 9):
+            return False
+        return True
 
     def display_board(self):
         """
@@ -69,16 +73,35 @@ class SudokuBoard:
         :return: boolean, true if val set, false if not
         """
 
-    def remove_val(self, square, val):
+    def remove_val(self, square):
         """
         Tries to remove value from the square
         :param square: tuple (x, y)
-        :param val: int value to input in square
         :return: boolean, true if val was removed, false if not
         """
+        (x, y) = square
+
+        if x not in range(0, 9) or y not in range(0, 9):
+            print("Remove out of range:", square)
+            return False
+
+        elif self.validate_remove(square):
+            print("Removed val:", self._sudoku_board[x][y], "From:", square)
+            self._sudoku_board[x][y] = 0
+            return True
+
+        else:
+            print("Square:", square, "cannot be cleared, it is preset to:", self._sudoku_board[x][y])
+
+        return False
+
 
 if __name__ == '__main__':
-    preset = [(0, 0, 5), (1, 0, 3), (4, 0, 7), (0, 1, 6), (3, 1, 1), (4, 1, 9), (5, 1, 5), (1, 2, 9), (2, 2, 8), (7, 2, 6),
-          (0, 3, 8), (4, 3, 6), (8, 3, 3), (0, 4, 4), (3, 4, 8), (5, 4, 3), (8, 4, 1), (0, 5, 7), (4, 5, 2), (8, 5, 6),
-          (1, 6, 6), (6, 6, 2), (7, 6, 8), (3, 7, 4), (4, 7, 1), (5, 7, 9), (8, 7, 5), (4, 8, 8), (7, 8, 7), (8, 8, 9)]
+    preset = [(0, 0, 5), (1, 0, 3), (4, 0, 7), (0, 1, 6), (3, 1, 1), (4, 1, 9), (5, 1, 5), (1, 2, 9), (2, 2, 8),
+              (7, 2, 6),
+              (0, 3, 8), (4, 3, 6), (8, 3, 3), (0, 4, 4), (3, 4, 8), (5, 4, 3), (8, 4, 1), (0, 5, 7), (4, 5, 2),
+              (8, 5, 6),
+              (1, 6, 6), (6, 6, 2), (7, 6, 8), (3, 7, 4), (4, 7, 1), (5, 7, 9), (8, 7, 5), (4, 8, 8), (7, 8, 7),
+              (8, 8, 9)]
     board = SudokuBoard(preset)
+    board.remove_val((0, 0))
