@@ -19,13 +19,48 @@ class SudokuBoard:
         print("Board initialized:\n")
         self.display_board()
 
-    def validate_input(self, square, input):
+    def validate_input(self, square, val):
         """
         Validates the input in the specific square
         :param square: tuple (x, y)
-        :param input: int value to input in square
+        :param val: int value to input in square
         :return: boolean, true if input possible, false if not
         """
+
+        if val not in range(1, 10):
+            print("Invalid value range given:", val)
+            return False
+
+        (x, y) = square
+
+        if x not in range(9) or y not in range(9):
+            print("Invalid X:", x, "or Y:", y, "Range give")
+            return False
+
+        # Validate if there is a value in the same 3x3 block
+        block_x = x // 3
+        block_y = y // 3
+        for i in range(0, 9):
+            temp_x = block_x*3 + i % 3
+            temp_y = block_y*3 + i // 3
+
+            if temp_x != x and temp_y != y:
+                if self._sudoku_board[temp_x][temp_y] == val:
+                    print("Value exists in block position, x:", temp_x, "y:", temp_y)
+                    return False
+
+        # Validate if is a value in the same row or column
+        for i in range(0, 8):
+            # if there is a value x-wise that has the same value
+            if self._sudoku_board[i][y] == val and i != x:
+                print("Value exists in row position, x:", i, "y:", y)
+                return False
+            # if there is a value y-wise that has the same value as input
+            if self._sudoku_board[x][i] == val and i != y:
+                print("Value exists in column position, x:", x, "y:", i)
+                return False
+
+        return True
 
     def validate_remove(self, square):
         """
@@ -61,9 +96,12 @@ class SudokuBoard:
                 print("[" + print_str + "]", end=end_with)
             # Line break
             print()
-            # if end of block add extra line seperator
+            # if end of block add extra line separator
             if (y + 1) % 3 == 0:
                 print()
+
+        # print end of out-print line
+        print('-' * 32)
 
     def input_val(self, square, val):
         """
@@ -72,6 +110,12 @@ class SudokuBoard:
         :param val: int value to input in square
         :return: boolean, true if val set, false if not
         """
+        if self.validate_input(square, val):
+            (x, y) = square
+            self._sudoku_board[x][y] = val
+            self.display_board()
+            return True
+        return False
 
     def remove_val(self, square):
         """
@@ -97,6 +141,7 @@ class SudokuBoard:
 
 
 if __name__ == '__main__':
+    # Test case for the function
     preset = [(0, 0, 5), (1, 0, 3), (4, 0, 7), (0, 1, 6), (3, 1, 1), (4, 1, 9), (5, 1, 5), (1, 2, 9), (2, 2, 8),
               (7, 2, 6),
               (0, 3, 8), (4, 3, 6), (8, 3, 3), (0, 4, 4), (3, 4, 8), (5, 4, 3), (8, 4, 1), (0, 5, 7), (4, 5, 2),
@@ -104,4 +149,4 @@ if __name__ == '__main__':
               (1, 6, 6), (6, 6, 2), (7, 6, 8), (3, 7, 4), (4, 7, 1), (5, 7, 9), (8, 7, 5), (4, 8, 8), (7, 8, 7),
               (8, 8, 9)]
     board = SudokuBoard(preset)
-    board.remove_val((0, 0))
+    board.input_val((6, 0), 1)
