@@ -139,6 +139,16 @@ class SudokuBoard:
 
         return False
 
+    def get_value(self, square):
+        """
+        Get the value in the square,
+        Zero if empty
+        :param square: tuple (x, y)
+        :return: int value at square
+        """
+        (x, y) = square
+        return self._sudoku_board[x][y]
+
 
 if __name__ == '__main__':
     # Test case for the function
